@@ -1,0 +1,432 @@
+---
+title: "Pengelompokan Kualitas Hidup Komuter dengan K-Means Clustering"
+subtitle: "Sebuah contoh penerapan K-Means Clustering dengan R"
+author: "Rezky Yayang Yakhamid"
+date: "12/12/2021"
+output: 
+  html_document:
+    toc: true
+    toc_depth: 3
+    toc_float: true
+    theme: united
+    highlight: tango
+bibliography: references.bib
+nocite: '@*'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, message=FALSE, warning=FALSE, results='hide'}
+#load library
+library(dplyr) #manipulate dataset
+library(factoextra) #clustering
+library(clValid) #validasi clustering
+library(corrplot) #plot korelasi
+library(REdaS) #bartlett spherical test, KMO (Kaiser-Meier-Olkin),
+library(psych) #corr.test
+```
+
+Syntax R berikut ini diajukan sebagai jawaban ujian akhir semester (UAS) tidak terstruktur yang diujikan Politeknik Statistika STIS mata kuliah Data Mining (Semester 7) tahun 2021. Diselesaikan pada tanggal 13 Desember 2021 dan dirapikan kembali pada tanggal 1 April 2021 sebagai bahan belajar. Semoga bermanfaat.
+
+# PENDAHULUAN
+
+## LATAR BELAKANG
+
+Komuter adalah seseorang yang melakukan perjalanan ulang-alik dalam satu hari (pergi dan pulang) secara terus menerus yang biasanya oleh karena pekerjaan/sekolah/kursus di luar kabupaten/kota tempat tinggalnya. Berdasarkan survei komuter yang dilakukan oleh Badan Pusat Statistik (BPS) pada tahun 2019, setidaknya ada sekitar 3,2 juta komuter (11 persen) dari 29 juta penduduk wilayah aglomerasi Jabodetabek [@BPS-2019]. Menurut Vanderslice & Rice (1992) dalam [@Rahmadana-2014], komuter memiliki banyak kesulitan dalam hidupnya termasuk stres sebagai dampak kehilangan waktu dalam perjalanan serta selalu merasa pekerjaan yang terus menumpuk. Penelitian mengenai kualitas hidup komuter di Indonesia telah banyak dilakukan seperti penelitian dengan membandingkan kualitas hidup pekerja komuter dan bukan komuter [@Cahyani-2018], membandingkan kualitas hidup komuter KRL dan Transjakarta [@Kusmawan-2020], dan membandingkan kualitas hidup komuter berdasarkan karakteristik sosial demografi responden [@Rahmadana-2014].
+
+## TUJUAN PENELITIAN
+
+Tujuan penelitian ini adalah melakukan pengelompokan terhadap komuter di Indonesia berdasarkan atribut-atribut yang menjadi indikator penyusun kualitas hidup responden
+
+# METODOLOGI
+
+## METODE ANALISIS
+
+Metode analisis yang digunakan yakni K-Means Clustering, yakni metode yang digunakan untuk melakukan pengelompokan objek ke dalam k klaster. Setelah didapatkan k klaster, analisis dilanjutkan dengan melihat perbandingan antara klaster-klaster yang terbentuk berdasarkan karakteristik sosial demografi responden di dalam klaster tersebut melalui analisis deskriptif (visualisasi).
+
+## VARIABEL PENELITIAN
+
+Variabel yang digunakan dalam melakukan pengelompokan komuter dengan menggunakan metode K-Means Clustrering antara lain sebagai berikut:
+
++-------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------------+
+| KODE        | DESKRIPSI VARIABEL                                                                                                                                                                                    | SATUAN        |
++============:+:======================================================================================================================================================================================================+==============:+
+|             | **Perumahan**                                                                                                                                                                                         |               |
++-------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------------+
+| B.1         | Keterjangkauan biaya perumahan                                                                                                                                                                        | Ordinal (1-5) |
++-------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------------+
+| B.2         | Kelayakan rumah                                                                                                                                                                                       | Ordinal (1-5) |
++-------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------------+
+|             | **Rasio ketergantungan**                                                                                                                                                                              |               |
++-------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------------+
+| C.4         | Rasio ketergantungan yakni rasio jumlah anggota keluarga yang tidak bekerja terhadap jumlah anggota keluarga yang bekerja                                                                             | Rasio         |
++-------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------------+
+|             | **Pendapatan**                                                                                                                                                                                        |               |
++-------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------------+
+| D.1         | Pendapat: penghasilan sebagai komuter lebih besar                                                                                                                                                     | Ordinal (1-5) |
++-------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------------+
+| D.2         | Pendapat: penghasilan sebagai komuter layak                                                                                                                                                           | Ordinal (1-5) |
++-------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------------+
+| D.3         | Kepatuhan jam kerja terhadap pendapatan                                                                                                                                                               | Ordinal (1-5) |
++-------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------------+
+| D.4         | Pendapatan per bulan dalam rupiah (Rp/bulan)                                                                                                                                                          | Rasio         |
++-------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------------+
+|             | **Keterjangkauan ke kota tujuan**                                                                                                                                                                     |               |
++-------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------------+
+| E.1         | Kemudahan moda transportasi                                                                                                                                                                           | Ordinal (1-5) |
++-------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------------+
+| E.2         | Kenyamanan perjalanan menuju tempat kerja                                                                                                                                                             | Ordinal (1-5) |
++-------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------------+
+| E.3         | Keseimbangan waktu perjalanan ke tempat kerja                                                                                                                                                         | Ordinal (1-5) |
++-------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------------+
+|             | **Kualitas hidup**                                                                                                                                                                                    |               |
++-------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------------+
+| F.1         | Pendapat: hidup Anda jauh lebih baik jika bekerja bukan menjadi komuter                                                                                                                               | Ordinal (1-5) |
++-------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------------+
+| F.2         | Pendapat: Anda tidak punya cukup waktu untuk bersosialisasi dengan tetangga Anda                                                                                                                      | Ordinal (1-5) |
++-------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------------+
+| F.3         | Pendapat: kualitas Anda sebagai orang tua terganggu karena Anda tidak memiliki cukup waktu untuk berinteraksi dengan anak-anak Anda                                                                   | Ordinal (1-5) |
++-------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------------+
+| F.4         | Pendapat: Anda tidak punya waktu untuk memikirkan diri sendiri                                                                                                                                        | Ordinal (1-5) |
++-------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------------+
+| F.5         | Pendapat: kehidupan keluarga Anda terganggu karena Anda tidak memiliki cukup waktu untuk berinteraksi dengan pasangan Anda sehingga banyak hal yang tidak dapat dibicarakan dalam waktu yang terbatas | Ordinal (1-5) |
++-------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------------+
+| F.6         | Pendapat: secara keseluruhan, kepuasan hidup Anda sebagai komuter berkurang karena Anda tidak lagi memiliki banyak waktu untuk menyalurkan hobi dan aktivitas lain selain aktivitas rutin             | Ordinal (1-5) |
++-------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------------+
+| F.7         | Pendapat: Anda merasa memiliki individu stres dengan aktivitas sebagai komuter                                                                                                                        | Ordinal (1-5) |
++-------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------------+
+| F.8         | Pendapat: meskipun pekerjaan Anda dalam batas yang wajar, tetapi waktu yang dialokasikan untuk bepergian sebagai komuter membuat Anda merasa terlalu banyak bekerja                                   | Ordinal (1-5) |
++-------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------------+
+
+Adapun variabel sosial-demografi responden yang akan digunakan untuk melihat perbandingan antar klaster antara lain: gender, usia, status perkawinan, pendidikan terakhir, agama, dan pekerjaan.
+
+# HASIL DAN PEMBAHASAN
+
+## TAHAP PRE-PROCESSING DATA
+
+Sebelum melakukan pengelompokan objek dengan klastering, terlebih dahulu dilakukan preprocessing data yang bertujuan untuk mengatasi missing value, mengatasi outlier, mereduksi dimensi data, dan mengatasi multikolinearitas.
+
+### Import Dataset
+
+Dataset: Kualitas Hidup Commuter Indonesia
+
+```{r}
+komuter <- read.csv2("data_commuter.csv",sep=',')
+#memperbaiki tipe data
+komuter$C.4 <- as.double(komuter$C.4)
+komuter$D.5 <- as.double(komuter$D.5)
+komuter$Kepuasan.Hidup <- as.factor(komuter$Kepuasan.Hidup)
+```
+
+### Observasi Dataset Komuter
+
+```{r, message=FALSE, warning=FALSE, results='hide'}
+#melihat lima observasi awal
+head(komuter)
+```
+
+```{r, message=FALSE, warning=FALSE, results='hide'}
+#melihat nama dan tipe variabel
+str(komuter)
+```
+
+```{r, message=FALSE, warning=FALSE, results='hide'}
+#melihat ringkasan data
+summary(komuter)
+```
+
+### Deteksi Missing Value
+
+```{r}
+#mengambil atribut yang menjadi dasar pengklasteran
+komuter <- data.frame(komuter)
+table(is.na(komuter[,-c(1:7,10:12,18,30)]))
+```
+
+Tidak ada missing value, preprocessing dapat dilanjutkan dengan mengatasi outlier
+
+### Deteksi Outlier
+
+Pendeteksian outlier dapat dilakukan dengan boxplot.
+
+```{r}
+#mendeteksi outlier dengan boxplot
+boxplot(scale(komuter[,-c(1:7,10:12,18,30)]))
+```
+
+Dari hasil visualisasi boxplot tersebut, terlihat bahwa terdapat outlier pada beberapa atribut.
+Outlier tersebut akan membuat proses clustering menjadi tidak efisien.
+
+### Mengatasi Outlier
+
+Outlier tersebut diatasi dengan teknik winsorizing, yakni dengan cara mengubah nilai outlier menjadi
+nilai 95% batas ekor atas/bawah (1.5 ± IQR)
+
+```{r}
+#mengatasi outlier dengan teknik winsorizing
+for(i in c(8:9,13:17,19:29)){
+qnt <- quantile(komuter[,i], probs=c(.25, .75), na.rm = T)
+caps <- quantile(komuter[,i], probs=c(.05, .95), na.rm = T)
+H <- 1.5 * IQR(komuter[,i], na.rm = T)
+komuter[,i][komuter[,i] < (qnt[1] - H)] <- caps[1]
+komuter[,i][komuter[,i] > (qnt[2] + H)] <- caps[2]
+}
+```
+
+### Normalisasi/Scalling Data
+
+Normalisasi dataset (scalling) digunakan untuk menyamakan skala atau satuan dari setiap atribut yang akan digunakan dalam analisis. Normalisasi dilakukan dengan cara transformasi z-score.
+
+```{r}
+#normalisasi/scaling data yang sudah diatasi outliernya menggunakan  z score
+komuter_scale <- data.frame(scale(komuter[,-c(1:7,10:12,18,30)]))
+#box plot
+boxplot(komuter_scale)
+```
+
+Hasil dari normalisasi tersebut dapat terlihat pada boxplot berikut di mana sudah dapat diperbandingkan karena memiliki skala yang sama. Setelah dilakukan manipulasi pada outlier melalui winsorizing, terlihat juga pada boxplot juga sudah tidak memiliki outlier yang berarti.
+
+### Principal Component Analysis
+
+Setelah memastikan data tidak mengandung missing value dan outlier, langkah selanjutnya
+adalah memastikan data tidak mengandung multikolinearitas atau korelasi antar atribut yang
+akan digunakan dalam clustering. Deteksi multikolinearitas dapat dilakukan dengan melihat
+plot korelasi antar atribut dan melakukan Uji Bartlett.
+
+**Plot korelasi**
+
+```{r}
+#plot korelasi (cek multikolinearitas)
+corrplot(cor(komuter_scale),method="ellipse",type="upper")
+```
+
+Dari plot korelasi tersebut, terdapat indikasi adanya multikolinearitas yang menunjukkan adanya korelasi yang cukup kuat antar atribut.
+
+**Bartlett test of Spericity**
+
+Hipotesis:\
+H0 : Matriks korelasi sama dengan matriks identitas (tidak ada multikolinearitas)\
+H1 : Matriks korelasi tidak sama dengan matriks identitas
+
+```{r}
+#bartlett test of sphericity
+bart_spher(komuter_scale)
+```
+
+Statistik uji: 𝜒2 = 2146.699.
+
+Dengan p-value \< 2.22e-16, maka keputusannya tolak H0, artinya matriks korelasi bukan merupakan matriks identitas sehingga antar atribut cukup bukti untuk dinyatakan memiliki korelasi atau terjadi multikolinearitas. Data preprocessing dilanjutkan dengan reduksi variabel dan PCA untuk mengatasi multikolinearitas.
+
+**Kaiser Mayer Olkin**
+
+Sebelum menerapkan PCA, terlebih dahulu mereduksi atribut yang tidak memenuhi Kaiser
+Mayer Olkin (KMO). Atribut yang tidak memenuhi yakni atribut yang memiliki Measure of
+Sampling Adequacy (MSA) kurang dari 0.5 dapat direduksi (dibuang) dan tidak diikutkan
+dalam analisis lanjutan.
+
+```{r}
+#kaiser mayer olkin
+KMO(komuter_scale)
+```
+
+Sesuai hasil perhitungan dengan R, tidak ada nilai MSA yang kurang dari 0.5. Oleh karena itu, tidak ada atribut yang harus dikeluarkan serta setiap atribut dapat dilanjutkan pada PCA untuk mengatasi multikolinearitas yang terjadi.
+
+**Principal Component Analysis (PCA)**
+
+```{r}
+pca <- princomp(komuter_scale,cor=FALSE)
+screeplot(pca,type="lines",col=4)
+```
+
+Hasil dari PCA ditampilkan dalam screeplot di samping. Pada scree plot tersebut, terlihat kurva mulai melandai pada komponen utama yang ketiga. Maka, akan digunakan tiga (3) komponen utama dalam analisis klaster dengan menggunakan metode K-Means. Ketiga komponen utama tersebut sudah dapat mewakili semua atribut yang digunakan dalam penelitian.
+
+```{r}
+# Menyimpan nilai KU 1, KU 2, dan KU 3
+komuter_pca <- pca$scores[,1:3]
+```
+
+```{r}
+set.seed(123)
+```
+
+## K-MEANS CLUSTERING
+
+Teknik unsupervised learning digunakan untuk melakukan proses pembelajaran pada data yang tidak memiliki informasi label dari objek yang akan diteliti. K-Means clustering adalah metode yang digunakan untuk melakukan pengelompokkan objek ke dalam sejumlah k klaster. Sebelum mengelompokkan observasi ke dalam klaster-klaster, terlebih dahulu ditentukan parameter berupa jumlah klaster (k) [@Pramana-2020].
+
+### Penentuan Parameter / Jumlah Klaster (k)
+
+Dengan melihat total within sum of square, silhouette, dan gap statistic
+
+```{r}
+fviz_nbclust(komuter_pca,kmeans,method = "wss")
+```
+
+Dari total Within Sum of Square, kurva melandai ketika k=3, artinya jumlah klaster yang disarankan adalah sebanyak 3 klaster
+
+```{r}
+fviz_nbclust(komuter_pca,kmeans,method = "silhouette")
+```
+
+Dari rata-rata lebar silhouette, kurva mencapai titik maksimum ketika k=3, artinya jumlah klaster yang disarankan adalah sebanyak 3 klaster
+
+```{r}
+fviz_nbclust(komuter_pca,kmeans,method = "gap_stat")
+```
+
+Dari gap statistic, kurva mencapai titik maksimum ketika k=3, artinya jumlah klaster yang disarankan adalah sebanyak 3 klaster.
+
+Berdasarkan total within sum of square, kurva mulai melandai pada k=3, artinya penambahan jumlah klaster tidak signifikan membawa pengaruh banyak atas penurunan variasi within cluster. Sementara itu, titik maksimum pada kriteria silhoute dan gap statistic juga menunjukkan pada saat k=3. Maka dari itu, peneliti menentukan jumlah klaster yang optimal sebanyak 3 klaster.
+
+### Validasi Klaster
+
+Penentuan jumlah klaster optimum juga dapat dilakukan dengan menggunakan library `clValid` yang menghasilkan beberapa kriteria yakni Connectivity, Dunn, dan Silhoutte.
+
+```{r}
+intern = clValid(komuter_pca,2:10,
+                 clMethods = 'kmeans',
+                 validation = 'internal')
+summary(intern)
+```
+
+Dari hasil validasi klaster tersebut, nilai connectivity menunjukkan angka paling kecil pada k=3, nilai dunn paling besar pada k=10, serta silhoutte menunjuukan angka paling besar pada k=3. Peneliti memutuskan untuk menggunakan nilai validasi dari silhoutte yang menunjukkan jumlah klaster yang harus dibentuk adalah sebanyak 3 klaster.
+
+### Pembentukan Model
+
+Berdasarkan beberapa pertimbangan dalam penentuan jumlah klaster (k) sebelumnya, maka
+ditetapkan jumlah klaster ada sebanyak 3 klaster. Pemodelan dengan menggunakan K-Means
+clustering menghasilkan 3 klaster dengan banyak observasi pada masing-masing klaster
+sebagai berikut.
+
+```{r}
+kmRes <- kmeans(komuter_pca,3)
+table(kmRes$cluster)
+```
+
+Hasil pengelompokan menunjukkan jumlah observasi yang hampir merata antara klaster 1, 2, dan 3. Klaster yang memiliki anggota paling banyak adalah klaster 2, sebanyak 136 unit.
+
+### Visualisasi Klaster
+
+```{r}
+fviz_cluster(kmRes,komuter_pca)
+pairs(komuter_pca,col=c(1:3)[kmRes$cluster],pch=16)
+```
+
+Untuk menjadikan klaster yang baik dan dapat diinterpretasikan, varians within cluster harus sehomogen mungkin dan varians between cluster harus seheterogen mungkin. Pada visualisasi klaster tersebut, antar titik observasi pada suatu klaster terlihat berdekatan dan menggerombol. Artinya varians within cluster sudah cukup homogen. Sementara itu, antar titik-titik observasi antar klaster terlihat berjauhan. Artinya varians between cluster sudah cukup heterogen. Maka dari itu, analisis dapat dilanjutkan dengan cluster profilling serta interpretasi antar klaster.
+
+### Profilling Klaster
+
+Cluster profilling adalah salah satu cara untuk menginterpretasikan hasil/output akhir
+pengklasteran. Caranya adalah dengan melihat mengidentifikasi rata-rata atau centroid dari
+setiap atribut di dalam suatu klaster dan dibandingkan dengan centroid pada klaster lainnya.
+Cluster profilling disajikan pada tabel sebagai berikut:
+
+```{r}
+cluster_mean <- aggregate(komuter,list(kmRes$cluster),mean)
+cluster_mean
+```
+
+Pada tabel tersebut, warna hijau menunjukkan nilai tinggi, warna kuning menunjukkan nilai sedang, dan warna merah menunjukkan nilai rendah pada suatu atribut dengan membandingkan atribut pada klaster lainnya. Pengecualian untuk atribut F.1 s.d. F.8 yang merupakan bagian dari dimensi kualitas hidup, oleh karena pertanyaan variabel bersifat negatif, maka warna hijau menunjukkan nilai rendah (memiliki kualitas hidup tinggi), serta sebaliknya warna merah menunjukkan nilai tinggi (memiliki kualitas hidup rendah). Interpretasi pada setiap klaster yang terbentuk adalah sebagai berikut:
+
+1.  **Klaster 1** menunjukkan dimensi perumahan (B.1 dam B.2) yang tinggi (biaya perumahan tinggi dan rumah yang layak), dimensi rasio ketergantungan dalam keluarga (C.4) yang sedang, dimensi pendapatan (D.1, D.2, D.3, dan D.4) yang tinggi, layak, dan sebanding, dimensi keterjangkauan terhadap kota tujuan yang mudah, nyaman, dan sebanding, serta dimensi kualitas hidup yang tinggi (F.1 s.d. F.8). Dilihat dari indikator-indikator penyusunnya, komuter yang dikelompokkan ke dalam Klaster 1 merupakan komuter yang memiliki kualitas hidup yang sangat layak.
+
+2.  **Klaster 2** menunjukkan dimensi perumahan (B.1 dam B.2) yang rendah (biaya perumahan rendah dan rumah yang tidak layak), dimensi rasio ketergantungan dalam keluarga (C.4) yang tinggi (sedikit anggota keluarga yang bekerja), dimensi pendapatan (D.1, D.2, D.3, dan D.4) yang sedang, tidak layak, dan tidak sebanding, dimensi keterjangkauan terhadap kota tujuan yang sulit, tidak nyaman, dan tidak sebanding, serta dimensi kualitas hidup yang rendah (F.1 s.d. F.8). Dilihat dari indikator-indikator penyusunnya, komuter yang dikelompokkan ke dalam Klaster 2 merupakan komuter yang memiliki kualitas hidup yang tidak layak.
+
+3.  **Klaster 3** menunjukkan dimensi perumahan (B.1 dam B.2) yang sedang (biaya perumahan sedang dan rumah yang cukup layak), dimensi rasio ketergantungan dalam keluarga (C.4) yang rendah (banyak anggota keluarga yang bekerja), dimensi pendapatan (D.1, D.2, D.3, dan D.4) yang rendah namun layak, dan sebanding, dimensi keterjangkauan terhadap kota tujuan yang mudah, nyaman, dan sebanding, serta dimensi kualitas hidup yang sedang (F.1 s.d. F.8). Dilihat dari indikator-indikator penyusunnya, komuter yang dikelompokkan ke dalam Klaster 3 merupakan komuter yang memiliki kualitas hidup yang cukup layak.
+
+## KARAKTERISTIK DEMOGRAFI KOMUTER
+
+Dari hasil klasterisasi tersebut, peneliti juga melihat karakteristik sosial demografi komuter
+dalam ketiga klaster tersebut. Setiap klaster tersebut memiliki kecenderungan memiliki
+karakteristik sosial demografi tertentu. Perbandingan antar klaster tersebut dapat dilihat pada
+visualisasi beberapa diagram batang dan boxplot berikut.
+
+```{r}
+#load data
+komuter <- cbind(komuter,kmRes$cluster)
+```
+
+### Gender vs Kualitas Hidup Komuter
+
+```{r}
+tab <- table(komuter[,c(2,31)])
+tab <- cbind(tab[,1],tab[,2],tab[,3])
+colnames(tab) <- c("1","2","3")
+rownames(tab) <- c("laki-laki","perempuan")
+barplot(t(tab),beside=TRUE,xlab="Gender",ylab="Frekuensi",col=gray.colors(3))
+legend("topright",c("klaster 1","klaster 2","klaster 3"),fill=gray.colors(3))
+```
+
+Pada karakteristik sosial demografi jenis kelamin (gender), laki-laki cenderung tergolong pada klaster 2 (kualitas hidup tidak layak) sedangkan perempuan cenderung terkelompok pada klaster 3 (kualitas hidup cukup layak).
+
+### Status Perkawinan vs Kualitas Hidup Komuter
+
+```{r}
+plot(as.factor(komuter[,31]),komuter[,3],xlab="Kualitas Hidup Komuter",ylab="Usia")
+```
+
+Pada karakteristik usia, komuter dengan usia yang tinggi cenderung tergolong pada klaster 1 (kualitas hidup sangat layak). Komuter dengan usia yang tinggi cenderung tergolong pada klaster 1 (kualitas hidup sangat layak), sedangkan klaster 2 dan 3 cenderung memiliki karakteristik usia yang lebih muda.
+
+### Status Perkawinan vs Kualitas Hidup Komuter
+
+```{r}
+tab <- table(komuter[,c(4,31)])
+tab <- cbind(tab[,1],tab[,2],tab[,3])
+tab <- tab[-5,]
+colnames(tab) <- c("1","2","3")
+rownames(tab) <- c("menikah","belum menikah","cerai hidup","cerai mati")
+barplot(t(tab),beside=TRUE,xlab="Status perkawinan",ylab="Frekuensi",col=gray.colors(3))
+legend("topright",c("klaster 1","klaster 2","klaster 3"),fill=gray.colors(3))
+```
+
+Seseorang yang telah menikah cenderung tergolong pada klaster 1 (sangat layak), sedangkan seseorang yang belum menikah cenderung tergolong pada kualitas hidup cukup layak dan tidak layak (klaster 2 dan
+3).
+
+### Pendidikan Terakhir vs Kualitas Hidup Komuter
+
+```{r}
+tab <- table(komuter[,c(5,31)])
+tab <- cbind(tab[,1],tab[,2],tab[,3])
+colnames(tab) <- c("1","2","3")
+rownames(tab) <- c("SD","SMP","SMA","Diploma","Strata-1","> S1")
+barplot(t(tab),beside=TRUE,xlab="Pendidikan Terakhir",ylab="Frekuensi",col=gray.colors(3))
+legend("topright",c("klaster 1","klaster 2","klaster 3"),fill=gray.colors(3))
+```
+
+Pada karakteristik pendidikan terakhir, komuter dengan gelar sarjana cenderung memiliki kualitas hidup sangat layak (klaster 1), sedangkan jenjang pendidikan lain yang lebih rendah (SD, SMP, SMA, Diploma) cenderung memiliki kualitas hidup tidak layak (klaster 2) dan cukup layak (klaster 3).
+
+### Agama vs Kualitas Hidup Komuter
+
+```{r}
+tab <- table(komuter[,c(6,31)])
+tab <- cbind(tab[,1],tab[,2],tab[,3])
+colnames(tab) <- c("1","2","3")
+rownames(tab) <- c("islam","kristen","katholik","budha")
+barplot(t(tab),beside=TRUE,xlab="Agama",ylab="Frekuensi",col=gray.colors(3))
+legend("topright",c("klaster 1","klaster 2","klaster 3"),fill=gray.colors(3))
+```
+
+Sulit diinterpretasikan karena responden sebagian besar hanya terdistribusi pada agama Islam saja. Selain itu, agama yang dianut juga tidak logis jika dihubungkan dengan kualitas hidup pekerja komuter.
+
+### Pekerjaan vs Kualitas Hidup Komuter
+
+```{r}
+tab <- table(komuter[,c(7,31)])
+tab <- cbind(tab[,1],tab[,2],tab[,3])
+colnames(tab) <- c("1","2","3")
+rownames(tab) <- c("PNS","Polisi/TNI","Swasta","Wiraswasta","Lainnya")
+barplot(t(tab),beside=TRUE,xlab="Pekerjaan",ylab="Frekuensi",col=gray.colors(3))
+legend("topleft",c("klaster 1","klaster 2","klaster 3"),fill=gray.colors(3))
+```
+
+Pekerja komuter yang berprofesi sebagai PNS, Polisi/TNI, dan wiraswasta cenderung memiliki kualitas hidup layak (klaster 1) sedangkan pekerja komuter bidang swasta dan lainnya cenderung memiliki kualitas hiudp tidak layak (klaster 2) dan cukup layak (klaster 3).
+
+# KESIMPULAN
+
+Berdasarkan hasil dan pembahasan yang telah diuraikan, dari penelitian ini dapat disimpulkan antara lain: (1) klaster optimum yang terbentuk dengan metode K-Means Clustering adalah sebanyak tiga (3) klaster. Melalui cluster profilling, ketiga klaster tersebut dapat diidentifikasi sebagai klaster komuter dengan kualitas hidup sangat layak (klaster 1), klaster komuter dengan kualitas hidup tidak layak (klaster 2), dan klaster dengan kualitas hidup sedang/cukup layak (klaster 3). Antar klaster tersebut juga memiliki kecenderungan karakteristik sosial demografi yang berbeda.
+
+# DAFTAR PUSTAKA
+
+::: {#refs}
+:::
