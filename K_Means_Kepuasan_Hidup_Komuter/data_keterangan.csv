@@ -1,0 +1,117 @@
+,,
+,,
+A,RESPONDENT IDENTITY,ANSWER
+A.1,Gender,1. Male
+,,2. Female
+A.2,Age,Ratio
+A.3,Marital Status,1. Married
+,,2. Single
+,,3. Widower
+,,4. Widow
+A.4,Educational Background,1. Primary School
+,,2. Junior High School
+,,3. Senior High School
+,,4. Diploma
+,,5. Under Graduate
+,,6. Graduate
+A.5,Religion,1. Moslem
+,,2. Christian
+,,3. Catholic
+,,4. Hinduisme
+,,5. Budhisme
+A.6,Occupation,1. Civil Servant
+,,2. Pilice/Military
+,,3. Private Employees
+,,4. Self Employees
+,,5. Others
+B,HOUSING,
+B.1,Affordability of Housing Costs,1. Very Not Affordable
+,,2. Not Affordable
+,,3. Neutral
+,,4. Affordable
+,,5. Very Affordable
+B.2,House Eligibility,1. Very Not Eligibale
+,,2. Not Eligibale
+,,3. Neutral
+,,4. Eligibale
+,,5. Very Eligibale
+C,DEPENDENCY RATIO,
+C.1,Number of Working Family Members,Ratio
+C.2,Number of  Not-Working Family Members,Ratio
+C.3,Family Members,Ratio
+C.4,Dependency Ratio,Ratio
+D,INCOME,
+D.1,Income as a Commuter is More Bigger,1. Very Not Agree
+,,2. Not Agree
+,,3. Neutral
+,,4. Agree
+,,5. Very Agree
+D.2,Income as a commuter is Worthy,1. Very Not Agree
+,,2. Not Agree
+,,3. Neutral
+,,4. Agree
+,,5. Very Agree
+D.3,Work Time Compliance with Income,1. Very Not Suitable
+,,2. Not Suitable
+,,3. Neutral
+,,4. Suitable
+,,5. Very Suitable
+D.4,Income per Month (IDR),Ratio
+D.5,Income per Month (USD),Ratio
+E,ACCESSIBILITY OF DESTINATION CITY,
+E.1,Ease of Transportation Mode,1. Very Not Ease
+,,2. Not Ease
+,,3. Neutral
+,,4. Ease
+,,5. Very Ease
+E.2,Comfort Travel to Work Locations,1. Very Not Comfort
+,,2. Not Comfort
+,,3. Neutral
+,,4. Comfort
+,,5. Very Confort
+E.3,Fairness Travel Time to Work Location,1. Very Not Fair
+,,2. Not Fair
+,,3. Neutral
+,,4. Fair
+,,5. Very Fair
+F,QUALITY OF LIFE,
+F.1,Your life will be much better if you work not become a commuter,1. Very Not Agree
+,,2. Not Agree
+,,3. Neutral
+,,4. Agree
+,,5. Very Agree
+F.2,You don't have enough time to do social interaction in your neighborhood,1. Very Not Agree
+,,2. Not Agree
+,,3. Neutral
+,,4. Agree
+,,5. Very Agree
+F.3,Your quality as a parent is disturbed because you do not have enough time to interact with your childreen,1. Very Not Agree
+,,2. Not Agree
+,,3. Neutral
+,,4. Agree
+,,5. Very Agree
+F.4,You don't have time to think about yourself,1. Very Not Agree
+,,2. Not Agree
+,,3. Neutral
+,,4. Agree
+,,5. Very Agree
+F.5,Your family life is disrupted because you do not have enough time to interact with your partner so that many things cannot be discussed because of this limited time,1. Very Not Agree
+,,2. Not Agree
+,,3. Neutral
+,,4. Agree
+,,5. Very Agree
+F.6,Your overall life satisfaction as a commuter is reduced because you no longer have much time to channel hobbies and other activities besides routine activities.,1. Very Not Agree
+,,2. Not Agree
+,,3. Neutral
+,,4. Agree
+,,5. Very Agree
+F.7,You feel that you have individuals stress with activities as a commuter,1. Very Not Agree
+,,2. Not Agree
+,,3. Neutral
+,,4. Agree
+,,5. Very Agree
+F.8,Even though your work is within reasonable limits but the time you allocate to travel as a commuter makes you feel overworked,1. Very Not Agree
+,,2. Not Agree
+,,3. Neutral
+,,4. Agree
+,,5. Very Agree
