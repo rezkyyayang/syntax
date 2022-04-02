@@ -28,7 +28,7 @@ library(REdaS) #bartlett spherical test, KMO (Kaiser-Meier-Olkin),
 library(psych) #corr.test
 ```
 
-Syntax R berikut ini diajukan sebagai jawaban ujian akhir semester (UAS) tidak terstruktur yang diujikan Politeknik Statistika STIS mata kuliah Data Mining (Semester 7) tahun 2021. Diselesaikan pada tanggal 13 Desember 2021 dan dirapikan kembali pada tanggal 1 April 2021 sebagai bahan belajar. Semoga bermanfaat.
+Syntax R berikut ini diajukan sebagai jawaban ujian akhir semester (UAS) tidak terstruktur yang diujikan Politeknik Statistika STIS mata kuliah Data Mining (Semester 7) tahun 2021. Diselesaikan pada tanggal 13 Desember 2021 dan dirapikan kembali pada tanggal 1 April 2021 sebagai bahan belajar. Semoga bermanfaat. Data yang digunakan dalam syntax ini dapat dilihat di <a>github.com/rezkyyayang/syntax/K_Means_Kepuasan_Hidup_Komuter/</a>
 
 # PENDAHULUAN
 
