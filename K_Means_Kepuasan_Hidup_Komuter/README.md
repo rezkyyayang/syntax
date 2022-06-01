@@ -19,4 +19,4 @@ install.packages(c("dplyr",
 ### Preview
 
 Lihat kode Rmarkdown selengkapnya dalam tampilan laman web (HTML)
-<a href="https://rezkyyayang.github.io/syntax/K_Means_Kepuasan_Hidup_Komuter/">Lihat HTML di sini</a>.
+<a href="https://rezkyyayang.github.io/syntax/K_Means_Kepuasan_Hidup_Komuter/">di sini</a>.
