@@ -8,11 +8,11 @@ Repositori ini memuat syntax R (dalam bentuk markdown) beserta interpretasi dan 
 Sebelum menjalankan program, beberapa library R berikut harus diinstal. Jalankan syntax berikut untuk menginstall library yang diperlukan.
 ```
 install.packages(c("dplyr",
-                    "factoextra"),
+                    "factoextra",
                     "clValid",
                     "corrplot",
                     "REdaS",
-                    "psych")
+                    "psych"))
 ```
 
 
