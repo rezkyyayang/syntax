@@ -1,6 +1,6 @@
-# Syntax by @rezkyyayang
+# Kumpulan Syntax oleh @rezkyyayang
 
-Author: <a href="https://linkr.bio/rezkyyayang">Rezky Yayang Yakhamid</a> <br>
+Author: <a href="https://linkr.bio/rezkyyayang">Rezky Yayang Yakhamid (@rezkyyayang)</a> <br>
 Ini adalah laman github yang berisi kumpulan syntax R (dan sebagainya) yang pernah ditulis sewaktu kuliah, baik untuk keperluan tugas, ujian, pembuatan artikel/makalah jurnal, maupun penyusunan skripsi. Repositori github dapat dilihat <a href="https://github.com/rezkyyayang/syntax/">di sini</a>. Semoga bermanfaat.
 
 ## Daftar isi
