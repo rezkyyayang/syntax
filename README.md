@@ -5,8 +5,8 @@ Ini adalah repositori github yang berisi kumpulan syntax R (dan sebagainya) yang
 ## Daftar isi
 
 ### <a href="https://github.com/rezkyyayang/syntax/tree/main/K_Means_Kepuasan_Hidup_Komuter">K-Means: Kepuasan Hidup Komuter</a>
-Pengelompokan komputer berdasarkan kepuasan hidupnya dengan metode K-Means Clustering.
+Pengelompokan komuter berdasarkan kepuasan hidupnya dengan metode K-Means Clustering.
 
-### <a href=""> Lorem ipsum: </a>
-Lorem ipsum dolor sit amet.
+### <a href="">Nonpar: Efektivitas PPKM dalam Penanganan Delta</a>
+Pengujian efektivitas PPKM Darurat dan Level 4 dalam penanganan lonjakan kasus Juli s.d. Agustus 2021 akibat varian Delta Covid-19
 
