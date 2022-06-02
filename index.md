@@ -1,37 +1,20 @@
-## Welcome to GitHub Pages
+# Syntax
 
-You can use the [editor on GitHub](https://github.com/rezkyyayang/syntax/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+Author: <a href="https://linkr.bio/rezkyyayang">Rezky Yayang Yakhamid</a>
+Ini adalah laman github yang berisi kumpulan syntax R (dan sebagainya) yang pernah ditulis sewaktu kuliah, baik untuk keperluan tugas, ujian, pembuatan artikel/makalah jurnal, maupun penyusunan skripsi. Repositori github dapat dilihat <a href="https://github.com/rezkyyayang/syntax/">di sini</a>. Semoga bermanfaat.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+## Daftar isi
 
-### Markdown
+### <a href="https://rezkyyayang.github.io/syntax/K_Means_Kepuasan_Hidup_Komuter">K-Means: Kepuasan Hidup Komuter</a>
+Pengelompokan komuter berdasarkan kepuasan hidupnya dengan metode K-Means Clustering.
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+### <a href="">Nonpar: Efektivitas PPKM dalam Penanganan Delta</a>
+Pengujian efektivitas PPKM Darurat dan Level 4 dalam penanganan lonjakan kasus Juli s.d. Agustus 2021 akibat varian Delta Covid-19 dengan metode statistik non-parametrik: uji Page dan uji Wilcoxon.
 
-```markdown
-Syntax highlighted code block
 
-# Header 1
-## Header 2
-### Header 3
+## Instalasi package/library R
 
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
+Sebelum menjalankan program, beberapa library R berikut harus diinstal. Jalankan syntax R berikut untuk menginstall library yang diperlukan.
 ```
-
-For more details see [Basic writing and formatting syntax](https://docs.github.com/en/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/rezkyyayang/syntax/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+install.packages("nama_library")
+```
