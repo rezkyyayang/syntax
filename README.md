@@ -8,5 +8,5 @@ Ini adalah repositori github yang berisi kumpulan syntax R (dan sebagainya) yang
 Pengelompokan komuter berdasarkan kepuasan hidupnya dengan metode K-Means Clustering.
 
 ### <a href="">Nonpar: Efektivitas PPKM dalam Penanganan Delta</a>
-Pengujian efektivitas PPKM Darurat dan Level 4 dalam penanganan lonjakan kasus Juli s.d. Agustus 2021 akibat varian Delta Covid-19
+Pengujian efektivitas PPKM Darurat dan Level 4 dalam penanganan lonjakan kasus Juli s.d. Agustus 2021 akibat varian Delta Covid-19 dengan metode statistik non-parametrik: uji Page dan uji Wilcoxon
 
